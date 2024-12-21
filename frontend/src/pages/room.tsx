@@ -1,10 +1,12 @@
 import OmegleChat from "@/components/chat";
+import Spinner from "@/components/spinner";
 import { onMount } from "@/lib/webrtc";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Room() {
   const myVideo = useRef<HTMLVideoElement | null>(null);
   const strangerVideo = useRef<HTMLVideoElement | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     onMount(myVideo);
@@ -15,7 +17,10 @@ export default function Room() {
   return <div className="flex h-screen">
     <div className="flex flex-col gap-1 h-full w-2/5 bg-green-50">
       <div className="h-1/2 bg-gray-50">
-        <video className="w-[770px] h-[480px] object-cover" ref={strangerVideo} id="strangerVideo" autoPlay />
+        {isConnected ?
+          <video className="w-[770px] h-[480px] object-cover" ref={strangerVideo} id="strangerVideo" autoPlay />
+          : <Spinner />
+        }
       </div>
       <div className="h-1/2 bg-zinc-400">
         <video ref={myVideo} id="myVideo" autoPlay />
@@ -26,7 +31,7 @@ export default function Room() {
 
     <div className="w-3/5 bg-red-50 h-screen ">
       <div className="h-full">
-        <OmegleChat myVideo={myVideo} strangerVideo={strangerVideo} />
+        <OmegleChat myVideo={myVideo} strangerVideo={strangerVideo} setIsCon={setIsConnected} />
       </div>
     </div>
   </div>

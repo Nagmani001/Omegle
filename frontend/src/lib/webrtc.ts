@@ -23,7 +23,14 @@ export const onMount = async (myVideo: any) => {
   }
 }
 
-export function handleStart(myVideo: any, strangerVideo: any) {
+export function handleStart(myVideo: any, strangerVideo: any, setIsCon: any) {
+  setIsCon(false);
+  socket.off('roomId');
+  socket.off('remote-socket');
+  socket.off('sdp:reply');
+  socket.off('ice:reply');
+  socket.off('disconnected');
+
   if (!socket) { return; }
   socket.emit("start", (person: any) => {
     type = person;
@@ -44,6 +51,7 @@ export function handleStart(myVideo: any, strangerVideo: any) {
       }
     }
     start(peer, myVideo, strangerVideo);
+    setIsCon(true);
   });
 
   socket.on("sdp:reply", async ({ sdp }: { sdp: any }) => {

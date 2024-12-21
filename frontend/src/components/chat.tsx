@@ -11,7 +11,7 @@ interface Message {
   content: string
 }
 
-export default function OmegleChat({ myVideo, strangerVideo }: { myVideo: null | HTMLVideoElement, strangerVideo: null | HTMLVideoElement }) {
+export default function OmegleChat({ myVideo, strangerVideo, setIsCon }: { myVideo: null | HTMLVideoElement, strangerVideo: null | HTMLVideoElement, setIsCon: any }) {
   //just to let the effect run for the first time 
   const [stupidity, setStupidity] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -40,8 +40,8 @@ export default function OmegleChat({ myVideo, strangerVideo }: { myVideo: null |
   setTimeout(() => setStupidity(!stupidity), 1);
 
   return (
-    <Card className="w-full max-w-6xl mx-auto h-[960px] flex flex-col">
-      <CardContent className="flex-grow p-4 overflow-hidden">
+    <Card className="w-full max-w-6xl mx-auto h-[960px] flex flex-col bg-slate-50">
+      <CardContent className="flex-grow p-4 bg-slate-100 overflow-hidden">
         <ScrollArea className="h-full pr-4">
           <div className="space-y-4">
             {messages.map((message, index) => (
@@ -67,7 +67,7 @@ export default function OmegleChat({ myVideo, strangerVideo }: { myVideo: null |
       <CardFooter className="p-4 border-t">
         <div className="flex flex-col mr-5 space-y-2">
           <div className="flex gap-3">
-            <Button className="h-40 w-40" onClick={() => { handleStart(myVideo, strangerVideo) }} variant="default">Start</Button>
+            <Button className="h-40 w-40" onClick={() => { handleStart(myVideo, strangerVideo, setIsCon) }} variant="default">Start</Button>
             <Button className="h-40 w-40" onClick={handleStop} variant="secondary">Stop</Button>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function OmegleChat({ myVideo, strangerVideo }: { myVideo: null |
           className="flex w-full mt-3 space-x-2"
         >
           <div className="flex gap-3 w-full">
-            {/* Adjusted the width of the input box */}
+
             <Input
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
