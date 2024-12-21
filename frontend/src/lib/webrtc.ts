@@ -4,7 +4,7 @@ let socket: any;
 let stream: null | MediaStream;
 let type: any;
 let remoteSocketId: any;
-let peer: RTCPeerConnection;
+let peer: RTCPeerConnection | null;
 let roomId: any;
 
 
@@ -55,18 +55,19 @@ export function handleStart(myVideo: any, strangerVideo: any, setIsCon: any) {
   });
 
   socket.on("sdp:reply", async ({ sdp }: { sdp: any }) => {
-    await peer.setRemoteDescription(new RTCSessionDescription(sdp));
+    await peer?.setRemoteDescription(new RTCSessionDescription(sdp));
     if (type == "p2") {
-      const ans = await peer.createAnswer();
-      await peer.setLocalDescription(ans);
-      socket?.emit("sdp:send", { sdp: peer.localDescription });
+      const ans = await peer?.createAnswer();
+      await peer?.setLocalDescription(ans);
+      socket?.emit("sdp:send", { sdp: peer?.localDescription });
     }
   });
   socket.on("ice:reply", async ({ candidate }: { candidate: any }) => {
-    await peer.addIceCandidate(candidate);
+    await peer?.addIceCandidate(candidate);
   });
 
   socket.on("disconnected", () => {
+    setIsCon(false);
   })
 }
 
@@ -99,8 +100,29 @@ async function start(peer: any, myVideo: any, strangerVideo: any) {
   }
 }
 
-export function handleStop() {
-  socket?.emit("stop");
+export function handleStop(strangerVideo: any, setIsCon: any) {
+  if (peer) {
+    peer.close();
+  }
+  socket?.off("roomId");
+  socket?.off("remote-socket");
+  socket?.off("sdp:reply");
+  socket?.off("ice:reply");
+
+  roomId = null;
+  remoteSocketId = null;
+  peer = null;
+  socket.emit("stop");
+
+  if (strangerVideo.current) {
+    strangerVideo.current.srcObject = null;
+  }
+  setIsCon(false);
+}
+
+export function handleRestart(myVideo: any, strangerVideo: any, setIsCon: any) {
+  handleStop(strangerVideo, setIsCon);
+  handleStart(myVideo, strangerVideo, setIsCon);
 }
 
 export function handleSendMessage(input: any, setMessages: any) {
@@ -117,5 +139,4 @@ export function handleReplyMessage(setMessages: any) {
 export function offSocket() {
   socket?.off("message-reply")
 }
-export function checkStatus() {
-}
+

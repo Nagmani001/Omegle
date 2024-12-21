@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send } from 'lucide-react'
-import { handleReplyMessage, handleSendMessage, handleStart, handleStop, offSocket } from '@/lib/webrtc'
+import { handleReplyMessage, handleRestart, handleSendMessage, handleStart, handleStop, offSocket } from '@/lib/webrtc'
 
 interface Message {
   sender: 'Stranger' | 'You'
@@ -17,7 +17,9 @@ export default function OmegleChat({ myVideo, strangerVideo, setIsCon }: { myVid
   const [messages, setMessages] = useState<Message[]>([
   ])
   const [inputMessage, setInputMessage] = useState('')
+  const [showFirst, setShowFirst] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
 
 
   const scrollToBottom = () => {
@@ -67,8 +69,12 @@ export default function OmegleChat({ myVideo, strangerVideo, setIsCon }: { myVid
       <CardFooter className="p-4 border-t">
         <div className="flex flex-col mr-5 space-y-2">
           <div className="flex gap-3">
-            <Button className="h-40 w-40" onClick={() => { handleStart(myVideo, strangerVideo, setIsCon) }} variant="default">Start</Button>
-            <Button className="h-40 w-40" onClick={handleStop} variant="secondary">Stop</Button>
+            {showFirst ?
+              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleStart(myVideo, strangerVideo, setIsCon) }} variant="default">Start</Button>
+              :
+              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleRestart(myVideo, strangerVideo, setIsCon) }} variant="default">Next</Button>
+            }
+            <Button className="h-40 w-40" onClick={() => { handleStop(strangerVideo, setIsCon) }} variant="secondary">Stop</Button>
           </div>
         </div>
         <form

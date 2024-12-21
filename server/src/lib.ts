@@ -37,21 +37,8 @@ export function handleStop(socket: any, io: any, roomArr: Array<room>) {
   roomArr.forEach((room, index) => {
     if (room.p1.id == socket.id) {
       io.to(room.p2.id).emit("disconnected");
-      if (room.p2.id !== null) {
-        room.isAvailable = true;
-        room.p1.id = room.p2.id;
-        room.p2.id = null;
-      } else {
-        roomArr.splice(index, 1)
-      }
     } else if (room.p2.id == socket.id) {
       io.to(room.p1.id).emit("disconnected");
-      if (room.p1.id !== null) {
-        room.isAvailable = true;
-        room.p2.id = null;
-      } else {
-        roomArr.splice(index, 1)
-      }
     }
   })
 }
