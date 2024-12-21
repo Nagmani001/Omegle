@@ -7,6 +7,7 @@ let remoteSocketId: any;
 let peer: RTCPeerConnection;
 let roomId: any;
 
+
 export const onMount = async (myVideo: any) => {
   const connSocket = io("http://localhost:3000");
   const connStream = await navigator.mediaDevices.getUserMedia({
@@ -80,7 +81,6 @@ async function start(peer: any, myVideo: any, strangerVideo: any) {
 
       peer.ontrack = (e: any) => {
         if (strangerVideo.current) {
-
           strangerVideo.current.srcObject = e.streams[0];
           strangerVideo.current.play();
         }
@@ -109,8 +109,5 @@ export function handleReplyMessage(setMessages: any) {
 export function offSocket() {
   socket?.off("message-reply")
 }
-export function checkStatus(setConnected: any) {
-  if (peer) {
-    setConnected(true);
-  }
+export function checkStatus() {
 }

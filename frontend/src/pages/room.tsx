@@ -1,6 +1,5 @@
 import OmegleChat from "@/components/chat";
-import { Button } from "@/components/ui/button";
-import { handleStart, handleStop, onMount } from "@/lib/webrtc";
+import { onMount } from "@/lib/webrtc";
 import { useEffect, useRef } from "react";
 
 export default function Room() {
@@ -26,12 +25,8 @@ export default function Room() {
 
 
     <div className="w-3/5 bg-red-50 h-screen ">
-      <div className="flex gap-3 absolute bottom-0" >
-        <Button onClick={() => { handleStart(myVideo, strangerVideo) }} variant="default">Start</Button>
-        <Button onClick={handleStop} variant="secondary">Stop</Button>
-      </div>
       <div className="h-full">
-        <OmegleChat />
+        <OmegleChat myVideo={myVideo} strangerVideo={strangerVideo} />
       </div>
     </div>
   </div>

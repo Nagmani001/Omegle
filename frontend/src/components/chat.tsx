@@ -1,22 +1,24 @@
-
 import { useState, useRef, useEffect } from 'react'
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Send } from 'lucide-react'
-import { handleReplyMessage, handleSendMessage, offSocket } from '@/lib/webrtc'
+import { handleReplyMessage, handleSendMessage, handleStart, handleStop, offSocket } from '@/lib/webrtc'
 
 interface Message {
   sender: 'Stranger' | 'You'
   content: string
 }
 
-export default function OmegleChat() {
+export default function OmegleChat({ myVideo, strangerVideo }: { myVideo: null | HTMLVideoElement, strangerVideo: null | HTMLVideoElement }) {
+  //just to let the effect run for the first time 
+  const [stupidity, setStupidity] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
   ])
   const [inputMessage, setInputMessage] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -24,25 +26,21 @@ export default function OmegleChat() {
 
   useEffect(() => {
     scrollToBottom()
+    return () => {
+      setInputMessage("");
+    }
   }, [messages])
 
   useEffect(() => {
     handleReplyMessage(setMessages);
     return () => {
       offSocket();
-      setInputMessage("");
     }
-  }, [messages])
-  useEffect(() => {
-    handleReplyMessage(setMessages);
-    return () => {
-      offSocket();
-      setInputMessage("");
-    }
-  }, [])
+  }, [messages, stupidity])
+  setTimeout(() => setStupidity(!stupidity), 1);
 
   return (
-    <Card className="w-full max-w-5xl mx-auto h-[960px] flex flex-col">
+    <Card className="w-full max-w-6xl mx-auto h-[960px] flex flex-col">
       <CardContent className="flex-grow p-4 overflow-hidden">
         <ScrollArea className="h-full pr-4">
           <div className="space-y-4">
@@ -67,23 +65,33 @@ export default function OmegleChat() {
         </ScrollArea>
       </CardContent>
       <CardFooter className="p-4 border-t">
+        <div className="flex flex-col mr-5 space-y-2">
+          <div className="flex gap-3">
+            <Button className="h-40 w-40" onClick={() => { handleStart(myVideo, strangerVideo) }} variant="default">Start</Button>
+            <Button className="h-40 w-40" onClick={handleStop} variant="secondary">Stop</Button>
+          </div>
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault()
             handleSendMessage(inputMessage, setMessages)
           }}
-          className="flex w-full space-x-2"
+          className="flex w-full mt-3 space-x-2"
         >
-          <Input
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-grow"
-          />
-          <Button type="submit" size="icon">
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send</span>
-          </Button>
+          <div className="flex gap-3 w-full">
+            {/* Adjusted the width of the input box */}
+            <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-grow h-12 px-4 w-4/5" // Increased the width to make it look better
+            />
+            <Button type="submit" className="h-15 flex items-center gap-2">
+              Send
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send</span>
+            </Button>
+          </div>
         </form>
       </CardFooter>
     </Card>
