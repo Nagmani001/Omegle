@@ -56,9 +56,6 @@ export function handleStop(socket: any, io: any, roomArr: Array<room>) {
   })
 }
 
-//export function handleRestart() {
-
-//}
 export function checkSocket(socket: any, roomArr: Array<room>) {
   for (const room of roomArr) {
     if (room.p1.id == socket.id) {

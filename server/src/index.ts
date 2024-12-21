@@ -16,9 +16,9 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     handleStop(socket, io, roomArr);
   })
-  // socket.on("restart", cb => {
-  //    handleRestart();
-  // });
+  socket.on("stop", () => {
+    handleStop(socket, io, roomArr);
+  })
 
 
   socket.on("sdp:send", ({ sdp }) => {
@@ -51,9 +51,22 @@ io.on("connection", (socket) => {
     }
   });
 
-  //  socket.on("message-send", ({ input, type, roomId }) => {
-
-  // });
+  socket.on("message-send", ({ input, type, roomId }) => {
+    socket.emit("room-connected");
+    roomArr.forEach(room => {
+      if (room.roomId == roomId) {
+        if (type == "p1") {
+          if (room.p2.id) {
+            io.to(room.p2.id).emit("message-reply", input);
+          }
+        } else if (type == "p2") {
+          if (room.p1.id) {
+            io.to(room.p1.id).emit("message-reply", input);
+          }
+        }
+      }
+    })
+  });
 });
 
 
