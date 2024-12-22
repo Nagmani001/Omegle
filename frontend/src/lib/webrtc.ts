@@ -9,17 +9,19 @@ let roomId: any;
 
 
 export const onMount = async (myVideo: any) => {
-  const connSocket = io("http://localhost:3000");
+  const connSocket = io(process.env.SOCKET_URL);
   const connStream = await navigator.mediaDevices.getUserMedia({
     audio: true, video: {
       width: { ideal: 770 },
       height: { ideal: 480 }
     }
   });
+  const videoTrack = connStream.getVideoTracks()[0];
+  const videoStream = new MediaStream([videoTrack]);
   socket = connSocket;
   stream = connStream;
   if (myVideo.current) {
-    myVideo.current.srcObject = stream;
+    myVideo.current.srcObject = videoStream;
   }
 }
 
