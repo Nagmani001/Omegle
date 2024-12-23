@@ -17,7 +17,7 @@ export function AuroraBackgroundDemo() {
         className="relative flex flex-col gap-4 items-center justify-center px-4"
       >
         <div className="text-3xl md:text-7xl font-bold dark:text-white text-center">
-          Omegle’s for girls ❌, this one’s for devs ✅.
+          For Devs Who Want to Connect and Create
         </div>
         <div className="font-extralight text-base md:text-4xl dark:text-neutral-200 py-4">
           Chat and collaborate with fellow developers in real-time.

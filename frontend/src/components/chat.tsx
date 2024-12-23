@@ -11,7 +11,7 @@ interface Message {
   content: string
 }
 
-export default function OmegleChat({ myVideo, strangerVideo, setIsCon }: { myVideo: null | HTMLVideoElement, strangerVideo: null | HTMLVideoElement, setIsCon: any }) {
+export default function OmegleChat({ strangerVideo, setIsCon }: { myVideo: null | HTMLVideoElement, strangerVideo: null | HTMLVideoElement, setIsCon: any }) {
   //just to let the effect run for the first time 
   const [stupidity, setStupidity] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -70,9 +70,9 @@ export default function OmegleChat({ myVideo, strangerVideo, setIsCon }: { myVid
         <div className="flex flex-col mr-5 space-y-2">
           <div className="flex gap-3">
             {showFirst ?
-              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleStart(myVideo, strangerVideo, setIsCon) }} variant="default">Start</Button>
+              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleStart(strangerVideo, setIsCon) }} variant="default">Start</Button>
               :
-              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleRestart(myVideo, strangerVideo, setIsCon) }} variant="default">Next</Button>
+              <Button className="h-40 w-40" onClick={() => { setShowFirst(false); handleRestart(strangerVideo, setIsCon) }} variant="default">Next</Button>
             }
             <Button className="h-40 w-40" onClick={() => { handleStop(strangerVideo, setIsCon) }} variant="secondary">Stop</Button>
           </div>

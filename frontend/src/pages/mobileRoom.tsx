@@ -28,9 +28,9 @@ export default function MobileRoom() {
       <div className="flex justify-center gap-10 pt-3 pl-3">
         {
           showFirst ?
-            <Button onClick={() => { setShowFirst(false); handleStart(myVideo, strangerVideo, setIsConnected) }} className="h-20 w-20">Start</Button>
+            <Button onClick={() => { setShowFirst(false); handleStart(strangerVideo, setIsConnected) }} className="h-20 w-20">Start</Button>
             :
-            <Button onClick={() => { setShowFirst(false); handleRestart(myVideo, strangerVideo, setIsConnected) }} className="h-20 w-20">Next</Button>
+            <Button onClick={() => { setShowFirst(false); handleRestart(strangerVideo, setIsConnected) }} className="h-20 w-20">Next</Button>
         }
         <Button onClick={() => { handleStop(strangerVideo, setIsConnected) }} className="h-20 w-20" variant="secondary">Stop</Button>
       </div>
